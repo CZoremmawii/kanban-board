@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Column from './components/Column';
 
-const API = 'http://127.0.0.1:8000/api';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`${API}/columns`)
+    axios.get('/columns')
       .then(res => {
         setColumns(res.data);
         setLoading(false);
@@ -17,7 +17,7 @@ function App() {
   }, []);
 
   async function addCard(columnId, cardTitle) {
-    const res = await axios.post(`${API}/cards`, {
+    const res = await axios.post('/cards', {
       column_id: columnId,
       title: cardTitle,
     });
@@ -28,7 +28,7 @@ function App() {
   }
 
   async function deleteCard(columnId, cardId) {
-    await axios.delete(`${API}/cards/${cardId}`);
+    await axios.delete(`/cards/${cardId}`);
     setColumns(columns.map(col => {
       if (col.id !== columnId) return col;
       return { ...col, cards: col.cards.filter(c => c.id !== cardId) };
@@ -36,7 +36,7 @@ function App() {
   }
 
   async function moveCard(fromColumnId, toColumnId, cardId) {
-    await axios.patch(`${API}/cards/${cardId}/move`, {
+    await axios.patch(`/cards/${cardId}/move`, {
       column_id: toColumnId,
     });
     const fromColumn = columns.find(col => col.id === fromColumnId);
@@ -51,11 +51,15 @@ function App() {
       return col;
     }));
   }
-  async function updateCard(cardId,updates){
-    const res = await axios.patch(`${API}/cards/${cardId}`, updates);
-    setColumns(columns.map(col=>({ ...col,
-    cards: col.cards.map(c => c.id === cardId ? res.data : c),})));
- }
+
+  async function updateCard(cardId, updates) {
+    const res = await axios.patch(`/cards/${cardId}`, updates);
+    setColumns(columns.map(col => ({
+      ...col,
+      cards: col.cards.map(c => c.id === cardId ? res.data : c),
+    })));
+  }
+
   if (loading) {
     return (
       <div style={{
