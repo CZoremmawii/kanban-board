@@ -13,7 +13,7 @@ function App() {
       .then(res => {
         setColumns(res.data);
         setLoading(false);
-      });
+      })
       .catch(()=>{
         setColumns([]);
         setLoading(false);
