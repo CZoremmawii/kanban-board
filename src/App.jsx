@@ -14,6 +14,10 @@ function App() {
         setColumns(res.data);
         setLoading(false);
       });
+      .catch(=>{
+        setColumns([]);
+        setLoading(false);
+      })
   }, []);
 
   async function addCard(columnId, cardTitle) {
