@@ -14,7 +14,7 @@ function App() {
         setColumns(res.data);
         setLoading(false);
       });
-      .catch(=>{
+      .catch(()=>{
         setColumns([]);
         setLoading(false);
       })
