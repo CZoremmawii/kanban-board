@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kanban-backend
+    env: php
+    buildCommand: composer install --no-dev && php artisan migrate --force && php artisan db:seed --force
+    startCommand: vendor/bin/heroku-php-apache2 public/
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
